@@ -1,0 +1,31 @@
+name: Test Maplibre-Swift-Macros
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: macos-14
+    strategy:
+      matrix:
+        scheme: [
+          MapLibreSwiftMacros
+        ]
+        destination: [
+          'platform=watchOS Simulator,name=Apple Watch Ultra 2 (49mm)',
+          'platform=iOS Simulator,name=iPad (10th generation),OS=16.4',
+          'platform=iOS Simulator,name=iPhone 15,OS=17.2'
+        ]
+
+    steps:
+    - name: Install xcbeautify
+      run: brew install xcbeautify
+
+    - name: Checkout maplibre-swift-macros
+      uses: actions/checkout@v3
+    
+    - name: Test ${{ matrix.scheme }} on ${{ matrix.destination }}
+      run: xcodebuild -scheme ${{ matrix.scheme }} test -skipMacroValidation -destination '${{ matrix.destination }}' | xcbeautify && exit ${PIPESTATUS[0]}
