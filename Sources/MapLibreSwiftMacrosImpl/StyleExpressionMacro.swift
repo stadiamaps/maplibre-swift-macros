@@ -1,17 +1,23 @@
 import Foundation
 import SwiftSyntax
-import SwiftSyntaxMacros
 import SwiftSyntaxBuilder
+import SwiftSyntaxMacros
 
 private let allowedKeys = Set(["supportsInterpolation"])
 
-private func generateStyleProperty(for attributes: AttributeSyntax, valueType: TypeSyntax, isRawRepresentable: Bool) throws -> [DeclSyntax] {
-    guard let args = attributes.arguments, let exprs = args.as(LabeledExprListSyntax.self), exprs.count >= 1, let identifierString = exprs.first?.expression.as(StringLiteralExprSyntax.self)?.representedLiteralValue else {
+private func generateStyleProperty(for attributes: AttributeSyntax, valueType: TypeSyntax,
+                                   isRawRepresentable: Bool) throws -> [DeclSyntax]
+{
+    guard let args = attributes.arguments, let exprs = args.as(LabeledExprListSyntax.self), exprs.count >= 1,
+          let identifierString = exprs.first?.expression.as(StringLiteralExprSyntax.self)?.representedLiteralValue
+    else {
         fatalError("Compiler bug: this macro did not receive arguments per its public signature.")
     }
 
     let flags = Dictionary(uniqueKeysWithValues: exprs.dropFirst().map { expr in
-        guard let key = expr.label?.text, allowedKeys.contains(key), let tokenKind = expr.expression.as(BooleanLiteralExprSyntax.self)?.literal.tokenKind else {
+        guard let key = expr.label?.text, allowedKeys.contains(key),
+              let tokenKind = expr.expression.as(BooleanLiteralExprSyntax.self)?.literal.tokenKind
+        else {
             fatalError("Compiler bug: this macro did not receive arguments per its public signature.")
         }
         return (key, tokenKind == TokenKind.keyword(.true))
@@ -21,27 +27,36 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
 
     let varDeclSyntax = DeclSyntax("fileprivate var \(identifier): NSExpression? = nil")
 
-    let constantFuncDecl = try generateFunctionDeclSyntax(identifier: identifier, valueType: valueType, isRawRepresentable: isRawRepresentable)
+    let constantFuncDecl = try generateFunctionDeclSyntax(
+        identifier: identifier,
+        valueType: valueType,
+        isRawRepresentable: isRawRepresentable
+    )
 
-    let getPropFuncDecl = try FunctionDeclSyntax("public func \(identifier)(featurePropertyNamed keyPath: String) -> Self") {
-        "var copy = self"
-        "copy.\(identifier) = NSExpression(forKeyPath: keyPath)"
-        "return copy"
-    }
+    let getPropFuncDecl =
+        try FunctionDeclSyntax("public func \(identifier)(featurePropertyNamed keyPath: String) -> Self") {
+            "var copy = self"
+            "copy.\(identifier) = NSExpression(forKeyPath: keyPath)"
+            "return copy"
+        }
 
     guard let constFuncDeclSyntax = DeclSyntax(constantFuncDecl),
-          let getPropFuncDeclSyntax = DeclSyntax(getPropFuncDecl) else {
+          let getPropFuncDeclSyntax = DeclSyntax(getPropFuncDecl)
+    else {
         fatalError("SwiftSyntax bug or implementation error: unable to construct DeclSyntax")
     }
 
     var extra: [DeclSyntax] = []
 
     if flags["supportsInterpolation"] == .some(true) {
-        let interpolationFuncDecl = try FunctionDeclSyntax("public func \(identifier)(interpolatedBy expression: MLNVariableExpression, curveType: MLNExpressionInterpolationMode, parameters: NSExpression?, stops: NSExpression) -> Self") {
-            "var copy = self"
-            "copy.\(identifier) = interpolatingExpression(expression: expression, curveType: curveType, parameters: parameters, stops: stops)"
-            "return copy"
-        }
+        let interpolationFuncDecl =
+            try FunctionDeclSyntax(
+                "public func \(identifier)(interpolatedBy expression: MLNVariableExpression, curveType: MLNExpressionInterpolationMode, parameters: NSExpression?, stops: NSExpression) -> Self"
+            ) {
+                "var copy = self"
+                "copy.\(identifier) = interpolatingExpression(expression: expression, curveType: curveType, parameters: parameters, stops: stops)"
+                "return copy"
+            }
 
         guard let interpolationFuncDeclSyntax = DeclSyntax(interpolationFuncDecl) else {
             fatalError("SwiftSyntax bug or implementation error: unable to construct DeclSyntax")
@@ -53,15 +68,17 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
     return [varDeclSyntax, constFuncDeclSyntax, getPropFuncDeclSyntax] + extra
 }
 
-private func generateFunctionDeclSyntax(identifier: TokenSyntax, valueType: TypeSyntax, isRawRepresentable: Bool) throws -> FunctionDeclSyntax {
-    if (isRawRepresentable) {
-        return try FunctionDeclSyntax("public func \(identifier)(constant value: \(valueType)) -> Self") {
+private func generateFunctionDeclSyntax(identifier: TokenSyntax, valueType: TypeSyntax,
+                                        isRawRepresentable: Bool) throws -> FunctionDeclSyntax
+{
+    if isRawRepresentable {
+        try FunctionDeclSyntax("public func \(identifier)(_ value: \(valueType)) -> Self") {
             "var copy = self"
             "copy.\(identifier) = NSExpression(forConstantValue: value.mlnRawValue.rawValue)"
             "return copy"
         }
     } else {
-        return try FunctionDeclSyntax("public func \(identifier)(constant value: \(valueType)) -> Self") {
+        try FunctionDeclSyntax("public func \(identifier)(_ value: \(valueType)) -> Self") {
             "var copy = self"
             "copy.\(identifier) = NSExpression(forConstantValue: value)"
             "return copy"
@@ -70,12 +87,17 @@ private func generateFunctionDeclSyntax(identifier: TokenSyntax, valueType: Type
 }
 
 public struct MLNStylePropertyMacro: MemberMacro {
-    public static func expansion(of node: AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax, in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [DeclSyntax] {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf _: some DeclGroupSyntax,
+        in _: some SwiftSyntaxMacros.MacroExpansionContext
+    ) throws -> [DeclSyntax] {
         guard let genericArgument = node
             .attributeName.as(IdentifierTypeSyntax.self)?
             .genericArgumentClause?
             .arguments.first?
-            .argument else {
+            .argument
+        else {
             fatalError("Compiler bug: this macro is missing a generic type constraint.")
         }
 
@@ -84,12 +106,17 @@ public struct MLNStylePropertyMacro: MemberMacro {
 }
 
 public struct MLNRawRepresentableStylePropertyMacro: MemberMacro {
-    public static func expansion(of node: AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax, in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [DeclSyntax] {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingMembersOf _: some DeclGroupSyntax,
+        in _: some SwiftSyntaxMacros.MacroExpansionContext
+    ) throws -> [DeclSyntax] {
         guard let genericArgument = node
             .attributeName.as(IdentifierTypeSyntax.self)?
             .genericArgumentClause?
             .arguments.first?
-            .argument else {
+            .argument
+        else {
             fatalError("Compiler bug: this macro is missing a generic type constraint.")
         }
 

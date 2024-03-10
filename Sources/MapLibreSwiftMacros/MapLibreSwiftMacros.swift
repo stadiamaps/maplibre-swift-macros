@@ -7,9 +7,15 @@ import Foundation
 /// TODO: Figure out where these edges are.
 /// TODO: Document different types
 @attached(member, names: arbitrary)
-public macro MLNStyleProperty<T>(_ named: String, supportsInterpolation: Bool = false) = #externalMacro(module: "MapLibreSwiftMacrosImpl", type: "MLNStylePropertyMacro")
+public macro MLNStyleProperty<T>(_ named: String, supportsInterpolation: Bool = false) = #externalMacro(
+    module: "MapLibreSwiftMacrosImpl",
+    type: "MLNStylePropertyMacro"
+)
 
 // NOTE: This version of the macro cannot be more specific, but it is assumed that T: MLNRawRepresentable.
 // This bound should be reintroduced when the packages are re-merged.
 @attached(member, names: arbitrary)
-public macro MLNRawRepresentableStyleProperty<T>(_ named: String) = #externalMacro(module: "MapLibreSwiftMacrosImpl", type: "MLNRawRepresentableStylePropertyMacro")
+public macro MLNRawRepresentableStyleProperty<T>(_ named: String) = #externalMacro(
+    module: "MapLibreSwiftMacrosImpl",
+    type: "MLNRawRepresentableStylePropertyMacro"
+)
