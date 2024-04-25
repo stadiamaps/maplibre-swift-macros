@@ -25,7 +25,7 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
 
     let identifier = TokenSyntax(stringLiteral: identifierString)
 
-    let varDeclSyntax = DeclSyntax("fileprivate var \(identifier): NSExpression? = nil")
+    let varDeclSyntax = DeclSyntax("public var \(identifier): NSExpression? = nil")
 
     let constantFuncDecl = try generateFunctionDeclSyntax(
         identifier: identifier,

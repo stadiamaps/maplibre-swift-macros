@@ -34,7 +34,7 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    fileprivate var backgroundColor: NSExpression? = nil
+                    public var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
@@ -61,7 +61,7 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    fileprivate var backgroundColor: NSExpression? = nil
+                    public var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
@@ -94,7 +94,7 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    fileprivate var backgroundColor: NSExpression? = nil
+                    public var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
@@ -133,7 +133,7 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    fileprivate var backgroundColor: NSExpression? = nil
+                    public var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
