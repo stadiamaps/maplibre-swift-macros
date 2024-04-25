@@ -25,13 +25,19 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
 
     let identifier = TokenSyntax(stringLiteral: identifierString)
 
-    let varDeclSyntax = DeclSyntax("public var \(identifier): NSExpression? = nil")
+    let varDeclSyntax = DeclSyntax("fileprivate var \(identifier): NSExpression? = nil")
 
     let constantFuncDecl = try generateFunctionDeclSyntax(
         identifier: identifier,
         valueType: valueType,
         isRawRepresentable: isRawRepresentable
     )
+    
+    let nsExpressionFuncDecl = try FunctionDeclSyntax("public func \(identifier)(expression: NSExpression) -> Self") {
+        "var copy = self"
+        "copy.\(identifier) = expression"
+        "return copy"
+    }
 
     let getPropFuncDecl =
         try FunctionDeclSyntax("public func \(identifier)(featurePropertyNamed keyPath: String) -> Self") {
@@ -41,7 +47,8 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
         }
 
     guard let constFuncDeclSyntax = DeclSyntax(constantFuncDecl),
-          let getPropFuncDeclSyntax = DeclSyntax(getPropFuncDecl)
+          let getPropFuncDeclSyntax = DeclSyntax(getPropFuncDecl),
+          let nsExpressionFuncDeclSyntax = DeclSyntax(nsExpressionFuncDecl)
     else {
         fatalError("SwiftSyntax bug or implementation error: unable to construct DeclSyntax")
     }
@@ -65,7 +72,7 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
         extra.append(interpolationFuncDeclSyntax)
     }
 
-    return [varDeclSyntax, constFuncDeclSyntax, getPropFuncDeclSyntax] + extra
+    return [varDeclSyntax, constFuncDeclSyntax, nsExpressionFuncDeclSyntax, getPropFuncDeclSyntax] + extra
 }
 
 private func generateFunctionDeclSyntax(identifier: TokenSyntax, valueType: TypeSyntax,

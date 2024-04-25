@@ -34,11 +34,17 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    public var backgroundColor: NSExpression? = nil
+                    fileprivate var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forConstantValue: value)
+                        return copy
+                    }
+                
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
                         return copy
                     }
 
@@ -61,11 +67,17 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    public var backgroundColor: NSExpression? = nil
+                    fileprivate var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forConstantValue: value)
+                        return copy
+                    }
+                
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
                         return copy
                     }
 
@@ -94,11 +106,17 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    public var backgroundColor: NSExpression? = nil
+                    fileprivate var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forConstantValue: value)
+                        return copy
+                    }
+                
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
                         return copy
                     }
 
@@ -133,7 +151,7 @@ final class ExpressionTests: XCTestCase {
                 """
                 struct Layer {
 
-                    public var backgroundColor: NSExpression? = nil
+                    fileprivate var backgroundColor: NSExpression? = nil
 
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
@@ -141,6 +159,12 @@ final class ExpressionTests: XCTestCase {
                         return copy
                     }
 
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
+                        return copy
+                    }
+                
                     public func backgroundColor(featurePropertyNamed keyPath: String) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forKeyPath: keyPath)
