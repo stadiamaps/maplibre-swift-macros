@@ -42,6 +42,12 @@ final class ExpressionTests: XCTestCase {
                         return copy
                     }
 
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
+                        return copy
+                    }
+
                     public func backgroundColor(featurePropertyNamed keyPath: String) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forKeyPath: keyPath)
@@ -66,6 +72,12 @@ final class ExpressionTests: XCTestCase {
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forConstantValue: value)
+                        return copy
+                    }
+
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
                         return copy
                     }
 
@@ -99,6 +111,12 @@ final class ExpressionTests: XCTestCase {
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forConstantValue: value)
+                        return copy
+                    }
+
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
                         return copy
                     }
 
@@ -138,6 +156,12 @@ final class ExpressionTests: XCTestCase {
                     public func backgroundColor(_ value: UIColor) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forConstantValue: value.mlnRawValue.rawValue)
+                        return copy
+                    }
+
+                    public func backgroundColor(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.backgroundColor = expression
                         return copy
                     }
 
