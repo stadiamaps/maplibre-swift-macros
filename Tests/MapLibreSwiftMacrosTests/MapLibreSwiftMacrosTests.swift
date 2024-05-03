@@ -41,7 +41,7 @@ final class ExpressionTests: XCTestCase {
                         copy.backgroundColor = NSExpression(forConstantValue: value)
                         return copy
                     }
-                
+
                     public func backgroundColor(expression: NSExpression) -> Self {
                         var copy = self
                         copy.backgroundColor = expression
@@ -74,7 +74,7 @@ final class ExpressionTests: XCTestCase {
                         copy.backgroundColor = NSExpression(forConstantValue: value)
                         return copy
                     }
-                
+
                     public func backgroundColor(expression: NSExpression) -> Self {
                         var copy = self
                         copy.backgroundColor = expression
@@ -113,7 +113,7 @@ final class ExpressionTests: XCTestCase {
                         copy.backgroundColor = NSExpression(forConstantValue: value)
                         return copy
                     }
-                
+
                     public func backgroundColor(expression: NSExpression) -> Self {
                         var copy = self
                         copy.backgroundColor = expression
@@ -164,7 +164,7 @@ final class ExpressionTests: XCTestCase {
                         copy.backgroundColor = expression
                         return copy
                     }
-                
+
                     public func backgroundColor(featurePropertyNamed keyPath: String) -> Self {
                         var copy = self
                         copy.backgroundColor = NSExpression(forKeyPath: keyPath)

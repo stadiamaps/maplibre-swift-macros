@@ -32,7 +32,7 @@ private func generateStyleProperty(for attributes: AttributeSyntax, valueType: T
         valueType: valueType,
         isRawRepresentable: isRawRepresentable
     )
-    
+
     let nsExpressionFuncDecl = try FunctionDeclSyntax("public func \(identifier)(expression: NSExpression) -> Self") {
         "var copy = self"
         "copy.\(identifier) = expression"
