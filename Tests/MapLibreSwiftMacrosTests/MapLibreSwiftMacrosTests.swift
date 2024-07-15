@@ -30,7 +30,7 @@ final class ExpressionTests: XCTestCase {
                 struct Layer {
                 }
                 """
-            } matches: {
+            } expansion: {
                 """
                 struct Layer {
 
@@ -63,7 +63,7 @@ final class ExpressionTests: XCTestCase {
                 struct Layer {
                 }
                 """
-            } matches: {
+            } expansion: {
                 """
                 struct Layer {
 
@@ -102,7 +102,7 @@ final class ExpressionTests: XCTestCase {
                 struct Layer {
                 }
                 """
-            } matches: {
+            } expansion: {
                 """
                 struct Layer {
 
@@ -147,7 +147,7 @@ final class ExpressionTests: XCTestCase {
                 struct Layer {
                 }
                 """
-            } matches: {
+            } expansion: {
                 """
                 struct Layer {
 
