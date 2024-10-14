@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import CompilerPluginSupport
@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         // Depend on the Swift 5.9 release of SwiftSyntax
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "509.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "510.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-macro-testing", .upToNextMinor(from: "0.5.1")),
     ],
     targets: [

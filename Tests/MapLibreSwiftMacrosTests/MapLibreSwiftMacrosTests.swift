@@ -177,4 +177,45 @@ final class ExpressionTests: XCTestCase {
             throw XCTSkip("macros are only supported when running tests for the host platform")
         #endif
     }
+
+    func testOptionalArray() throws {
+        // While this property is not actually implemented this way in the DSL,
+        // this test verifies that optional array props work correctly.
+        #if canImport(MapLibreSwiftMacrosImpl)
+            assertMacro {
+                """
+                @MLNStyleProperty<[String]?>("textFontNames", supportsInterpolation: false)
+                struct Layer {
+                }
+                """
+            } expansion: {
+                """
+                struct Layer {
+
+                    fileprivate var textFontNames: NSExpression? = nil
+
+                    public func textFontNames(_ value: [String]?) -> Self {
+                        var copy = self
+                        copy.textFontNames = NSExpression(forConstantValue: value)
+                        return copy
+                    }
+
+                    public func textFontNames(expression: NSExpression) -> Self {
+                        var copy = self
+                        copy.textFontNames = expression
+                        return copy
+                    }
+
+                    public func textFontNames(featurePropertyNamed keyPath: String) -> Self {
+                        var copy = self
+                        copy.textFontNames = NSExpression(forKeyPath: keyPath)
+                        return copy
+                    }
+                }
+                """
+            }
+        #else
+            throw XCTSkip("macros are only supported when running tests for the host platform")
+        #endif
+    }
 }
