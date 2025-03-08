@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         // Depend on the Swift 5.9 release of SwiftSyntax
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"601.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0" ..< "601.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-macro-testing", .upToNextMinor(from: "0.6.0")),
     ],
     targets: [
